@@ -14,13 +14,12 @@ import PostType from "../../types/post";
 
 type Props = {
   post: PostType;
-  morePosts: PostType[];
   preview?: boolean;
 };
 
-const Post = ({ post, morePosts, preview }: Props) => {
+const Post = ({ post, preview }: Props) => {
   const router = useRouter();
-  if (!router.isFallback && !post?.slug) {
+  if (!router.isFallback && !post?.id) {
     return <ErrorPage statusCode={404} />;
   }
   return (
@@ -36,15 +35,9 @@ const Post = ({ post, morePosts, preview }: Props) => {
                 <title>
                   {post.title} | Next.js Blog Example with {CMS_NAME}
                 </title>
-                <meta property="og:image" content={post.ogImage.url} />
               </Head>
-              <PostHeader
-                title={post.title}
-                coverImage={post.coverImage}
-                date={post.date}
-                author={post.author}
-              />
-              <PostBody content={post.content} />
+              <PostHeader title={post.title} coverImage={post.coverImage!} />
+              <PostBody content={post.body} />
             </article>
           </>
         )}
