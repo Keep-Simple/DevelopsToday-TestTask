@@ -1,3 +1,4 @@
+import axios from "axios";
 import ErrorPage from "next/error";
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -7,9 +8,8 @@ import Layout from "../../components/layout";
 import PostBody from "../../components/post-body";
 import PostHeader from "../../components/post-header";
 import PostTitle from "../../components/post-title";
-import { getAllPosts, getPostBySlug } from "../../lib/api";
-import { CMS_NAME } from "../../lib/constants";
-import markdownToHtml from "../../lib/markdownToHtml";
+import { API_URL, CMS_NAME } from "../../lib/constants";
+import { getRandomCoverImg } from "../../lib/utils";
 import PostType from "../../types/post";
 
 type Props = {
@@ -48,43 +48,26 @@ const Post = ({ post, preview }: Props) => {
 
 export default Post;
 
-type Params = {
-  params: {
-    slug: string;
-  };
-};
-
-export async function getStaticProps({ params }: Params) {
-  const post = getPostBySlug(params.slug, [
-    "title",
-    "date",
-    "slug",
-    "author",
-    "content",
-    "ogImage",
-    "coverImage",
-  ]);
-  const content = await markdownToHtml(post.content || "");
+export async function getStaticProps({ params: { id } }: any) {
+  const res = await axios.get(`${API_URL}/posts/${id}?_embed=comments`);
+  const post = { ...res.data, coverImage: getRandomCoverImg() };
 
   return {
-    props: {
-      post: {
-        ...post,
-        content,
-      },
-    },
+    props: { post },
+    revalidate: 1,
   };
 }
 
 export async function getStaticPaths() {
-  const posts = getAllPosts(["slug"]);
+  const res = await axios.get(`${API_URL}/posts`);
+  const ids = res.data?.map((p: PostType) => ({
+    params: {
+      id: p.id.toString(),
+    },
+  }));
 
   return {
-    paths: posts.map((p) => ({
-      params: {
-        slug: p.slug,
-      },
-    })),
-    fallback: false,
+    paths: ids,
+    fallback: true,
   };
 }

@@ -1,11 +1,13 @@
+import axios from "axios";
 import Head from "next/head";
 import Container from "../components/container";
 import HeroPost from "../components/hero-post";
 import Intro from "../components/intro";
 import Layout from "../components/layout";
 import MoreStories from "../components/more-stories";
-import { getAllPosts } from "../lib/api";
-import Post from "../types/post";
+import { API_URL } from "../lib/constants";
+import { getRandomCoverImg } from "../lib/utils";
+import { default as Post, default as PostType } from "../types/post";
 
 type Props = {
   allPosts: Post[];
@@ -39,14 +41,12 @@ const Index = ({ allPosts }: Props) => {
 export default Index;
 
 export const getStaticProps = async () => {
-  const allPosts = getAllPosts([
-    "title",
-    "date",
-    "slug",
-    "author",
-    "coverImage",
-    "excerpt",
-  ]);
+  const res = await axios.get(`${API_URL}/posts`);
+
+  const allPosts = res.data?.map((p: PostType) => ({
+    ...p,
+    coverImage: getRandomCoverImg(),
+  }));
 
   return {
     props: { allPosts },
