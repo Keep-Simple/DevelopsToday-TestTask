@@ -8,22 +8,21 @@ import Layout from "../../components/layout";
 import PostBody from "../../components/post-body";
 import PostHeader from "../../components/post-header";
 import PostTitle from "../../components/post-title";
-import { API_URL, CMS_NAME } from "../../lib/constants";
+import { API_URL } from "../../lib/constants";
 import { getRandomCoverImg } from "../../lib/utils";
 import PostType from "../../types/post";
 
 type Props = {
   post: PostType;
-  preview?: boolean;
 };
 
-const Post = ({ post, preview }: Props) => {
+const Post = ({ post }: Props) => {
   const router = useRouter();
   if (!router.isFallback && !post?.id) {
     return <ErrorPage statusCode={404} />;
   }
   return (
-    <Layout preview={preview}>
+    <Layout>
       <Container>
         <Header />
         {router.isFallback ? (
@@ -32,12 +31,10 @@ const Post = ({ post, preview }: Props) => {
           <>
             <article className="mb-32">
               <Head>
-                <title>
-                  {post.title} | Next.js Blog Example with {CMS_NAME}
-                </title>
+                <title>{post.title} | Blog Example</title>
               </Head>
               <PostHeader title={post.title} coverImage={post.coverImage!} />
-              <PostBody content={post.body} />
+              <PostBody body={post.body} comments={post.comments} />
             </article>
           </>
         )}

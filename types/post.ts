@@ -1,8 +1,11 @@
+import CommentType from "./comment";
+
 type PostType = {
+  id: string;
   title: string;
   body: string;
   coverImage?: string;
-  id: string;
+  comments?: CommentType[];
 };
 
 export default PostType;
