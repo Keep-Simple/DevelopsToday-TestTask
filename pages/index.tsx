@@ -15,7 +15,6 @@ import { default as PostType } from "../types/post";
 
 const Index = () => {
   const allPosts = useSelector<State, PostType[]>(postsSelector);
-  console.log(allPosts);
 
   const heroPost = allPosts[0];
   const morePosts = allPosts.slice(1);
@@ -23,7 +22,7 @@ const Index = () => {
     <>
       <Layout>
         <Head>
-          <title>Your Posts-Feed</title>
+          <title>Your Feed</title>
         </Head>
         <Container>
           <Intro />
@@ -35,12 +34,7 @@ const Index = () => {
             />
           )}
           <Link href="/posts/new">
-            <button
-              className="mx-auto container text-lg transition
-              duration-300 ease-in-out border-transparent bg-black
-            hover:bg-white hover:text-black border-2 hover:border-black
-              py-3 mb-10 font-bold text-white"
-            >
+            <button className={`btn text-lg container mb-10`}>
               Create Story
             </button>
           </Link>

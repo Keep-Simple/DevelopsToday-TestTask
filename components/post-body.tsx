@@ -16,7 +16,10 @@ const PostBody = ({ body, comments }: Props) => {
       </h1>
       <div>
         {comments?.map((c) => (
-          <div className="p-5 rounded-sm shadow-small my-4 font-medium text-gray-800">
+          <div
+            key={c.id}
+            className="p-5 rounded-sm shadow-small my-4 font-medium text-gray-800"
+          >
             {c.body}
           </div>
         ))}

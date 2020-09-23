@@ -31,7 +31,7 @@ const Post = ({ post }: Props) => {
           <>
             <article className="mb-32">
               <Head>
-                <title>{post.title} | Blog Example</title>
+                <title>{post.title || "Blog Example"}</title>
               </Head>
               <PostHeader title={post.title} coverImage={post.coverImage!} />
               <PostBody body={post.body} comments={post.comments} />

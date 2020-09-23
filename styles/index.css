@@ -1,15 +1,13 @@
 @tailwind base;
-
-/* Write your own custom base styles here */
-
-/* Start purging... */
-@tailwind components;
-/* Stop purging. */
-
-/* Write you own custom component styles here */
-
-/* Start purging... */
 @tailwind utilities;
-/* Stop purging. */
+@tailwind components;
 
-/* Your own custom utilities */
+@layer components {
+  .btn {
+    @apply transition duration-300 ease-in-out border-2 border-transparent bg-black
+                    py-3 font-bold text-white;
+  }
+  .btn:hover {
+    @apply bg-white text-black border-black;
+  }
+}

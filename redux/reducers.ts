@@ -15,7 +15,6 @@ export const reducer = (
 ): State => {
   switch (action.type) {
     case HYDRATE:
-      // Attention! This will overwrite client state! Real apps should use proper reconciliation.
       return { posts: { ...state.posts, ...action.payload.posts } };
     case ALL_POSTS:
       return { posts: action.payload };
