@@ -1,19 +1,22 @@
 import axios from "axios";
 import Head from "next/head";
+import Link from "next/link";
+import { useSelector } from "react-redux";
 import Container from "../components/container";
 import HeroPost from "../components/hero-post";
 import Intro from "../components/intro";
 import Layout from "../components/layout";
 import MoreStories from "../components/more-stories";
 import { API_URL } from "../lib/constants";
-import { getRandomCoverImg } from "../lib/utils";
-import { default as Post, default as PostType } from "../types/post";
+import { getRandomCoverImg, postsSelector } from "../lib/utils";
+import { State } from "../redux/reducers";
+import { wrapper } from "../redux/store";
+import { default as PostType } from "../types/post";
 
-type Props = {
-  allPosts: Post[];
-};
+const Index = () => {
+  const allPosts = useSelector<State, PostType[]>(postsSelector);
+  console.log(allPosts);
 
-const Index = ({ allPosts }: Props) => {
   const heroPost = allPosts[0];
   const morePosts = allPosts.slice(1);
   return (
@@ -31,7 +34,17 @@ const Index = ({ allPosts }: Props) => {
               id={heroPost.id}
             />
           )}
-          {morePosts.length > 0 && <MoreStories posts={morePosts} />}
+          <Link href="/posts/new">
+            <button
+              className="mx-auto container text-lg transition
+              duration-300 ease-in-out border-transparent bg-black
+            hover:bg-white hover:text-black border-2 hover:border-black
+              py-3 mb-10 font-bold text-white"
+            >
+              Create Story
+            </button>
+          </Link>
+          {morePosts?.length > 0 && <MoreStories posts={morePosts} />}
         </Container>
       </Layout>
     </>
@@ -40,15 +53,16 @@ const Index = ({ allPosts }: Props) => {
 
 export default Index;
 
-export const getStaticProps = async () => {
+export const getStaticProps = wrapper.getStaticProps(async ({ store }) => {
   const res = await axios.get(`${API_URL}/posts`);
 
-  const allPosts = res.data?.map((p: PostType) => ({
-    ...p,
-    coverImage: getRandomCoverImg(),
-  }));
+  let posts: State["posts"] = {};
 
-  return {
-    props: { allPosts },
-  };
-};
+  res.data?.forEach((p: PostType) => {
+    posts[p.id] = { ...p, coverImage: getRandomCoverImg() };
+  });
+
+  store.dispatch({ type: "ALL_POSTS", payload: posts });
+
+  return { revalidate: 1 };
+});

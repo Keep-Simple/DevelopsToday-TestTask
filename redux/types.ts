@@ -1,5 +1,2 @@
-// REDUX ACTION TYPES
-export const TICK = "TICK";
-export const INCREMENT = "INCREMENT";
-export const DECREMENT = "DECREMENT";
-export const RESET = "RESET";
+export const ALL_POSTS = "ALL_POSTS";
+export const ADD_POST = "ADD_POST";
