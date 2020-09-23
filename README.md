@@ -1,6 +1,11 @@
-# A statically generated blog using Next.js and TypeScript
+# A SSG blog created with Next.js and TypeScript
 
+# Run dev build
 ```bash
-npm run dev
-yarn run dev
+yarn dev
+```
+# Run production build
+```bash
+yarn build
+yarn start
 ```
